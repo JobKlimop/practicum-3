@@ -29,9 +29,17 @@ router.get('/cities/:id?', function (req, res, next) {
 	});
 });
 
-router.get('/countries', function (req, res, next) {
+router.get('/countries:code', function (req, res, next) {
 
-	query_str = 'SELECT * FROM country;';
+	var code = req.params.code;
+
+	var query_str;
+
+	if (code) {
+		query_str = 'SELECT * FROM country WHERE Code ="' + code + '";';
+	} else {
+		query_str = 'SELECT * FROM country;';
+	}
 
 	pool.getConnection( function (err, connection) {
 		if(err){ throw error }
