@@ -7,6 +7,7 @@
 var express = require('express');
 var router = express.Router();
 var pool = require('../db/db_connector.js');
+var http = require('http');
 
 router.get('/cities/:id?', function (req, res, next) {
 
@@ -26,6 +27,29 @@ router.get('/cities/:id?', function (req, res, next) {
 			if(err){ throw error }
 			res.status(200).json(rows);
 		});
+	});
+});
+
+router.post('/cities', function(req, res){
+	var city = req.body;
+	var query = {
+		sql: 'INSERT INTO `city`(ID, Name, CountryCode, District, Population) VALUES (?, ?, ?, ?, ?)',
+		values: [city.ID, city.Name, city.CountryCode, city.District, city.Population],
+		timeout: 2000 // 2 seconde
+	};
+
+	console.dir(city);
+	console.log('Query:' + query.sql);
+
+	res.contentType('application/json');
+	db.query(query, function(error, rows, fields){
+		if(error){
+			res.status(400);
+			res.json(error);
+		} else {
+			res.status(200);
+			res.json(rows);
+		};
 	});
 });
 

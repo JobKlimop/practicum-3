@@ -5,8 +5,11 @@
 var http        = require('http');
 var express     = require('express');
 var config      = require('./config.json');
+var bodyparser  = require('body-parser')
 
 var app = express();
+
+app.use(bodyparser.urlencoded({'extended' : 'true'}));
 
 app.set('PORT', config.webPort);
 
@@ -21,6 +24,7 @@ app.get('/api/v1/', function(req,res,next){
 });
 
 app.use('/apiv1', require('./routes/route_apiv1'));
+
 
 //Start the server
 var port = process.env.PORT || app.get('PORT');
