@@ -1,0 +1,8 @@
+{
+  "secretkey": "MyFirstServerSuperSecretKet-123456789-",
+  "dbUsername": "WorldUser",
+  "dbPassword": "Aardappel",
+  "dbSchema": "world",
+  "dbServer": "localhost",
+  "webPort": "8080"
+}
