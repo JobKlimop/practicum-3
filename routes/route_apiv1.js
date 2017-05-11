@@ -8,13 +8,13 @@ var express = require('express');
 var router = express.Router();
 var pool = require('../db/db_connector.js');
 
-router.get('/cities/:name?', function (req, res, next) {
+router.get('/cities/:id?', function (req, res, next) {
 
-	var name = req.params.name;
+	var id = req.params.id;
 
 	var query_str;
-	if (name) {
-		query_str = 'SELECT * FROM city WHERE name ="' + name + '";';
+	if (id) {
+		query_str = 'SELECT * FROM city WHERE ID ="' + id + '";';
 	} else {
 		query_str = 'SELECT * FROM city;';
 	}
