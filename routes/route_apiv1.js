@@ -29,6 +29,20 @@ router.get('/cities/:id?', function (req, res, next) {
 	});
 });
 
+router.get('/countries', function (req, res, next) {
+
+	query_str = 'SELECT * FROM country;';
+
+	pool.getConnection( function (err, connection) {
+		if(err){ throw error }
+		connection.query(query_str, function (err, rows, fields) {
+			connection.release();
+			if(err){ throw error }
+			res.status(200).json(rows);
+		});
+	});
+});
+
 router.get('/help', function (req, res) {
 	res.json({"msg": "Help function"});
 });
