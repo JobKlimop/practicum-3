@@ -13,12 +13,10 @@ app.use(bodyParser.urlencoded({'extended':'true'}));
 app.use(bodyParser.json());
 app.use(bodyParser.json({type: 'application/vnd.api+json'}));
 
-app.use(bodyParser.urlencoded({'extended' : 'true'}));
-
 app.set('PORT', config.webPort);
 
 app.all('*', function(req, res, next){
-    console.log(JSON.stringify(req.headers));
+    //console.log(JSON.stringify(req.headers));
     console.log(req.method + " " + req.url);
     next();
 });
