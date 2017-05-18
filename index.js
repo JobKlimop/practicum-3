@@ -5,7 +5,8 @@
 var http        = require('http');
 var express     = require('express');
 var config      = require('./config.json');
-var bodyparser  = require('body-parser')
+var bodyParser  = require('body-parser');
+var logger      = require('morgan');
 
 var app = express();
 
