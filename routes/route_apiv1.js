@@ -104,4 +104,25 @@ router.post('/countries', function(req, res){
     });
 });
 
+router.put('/countries', function (req, res) {
+	var country = req.body;
+	var query = {
+		sql: 'UPDATE `country` SET Population=' + country.Population + ' WHERE Code="' + country.Code + '"',
+		timeout: 2000 // 2 seconde
+	}
+
+	console.log('Query: ' + query.sql);
+
+	res.contentType('application/json');
+	pool.query(query, function(error, rows, fields){
+		if(error){
+			res.status(400);
+			res.json(error);
+		} else {
+			res.status(200);
+			res.json(rows);
+		};
+	});
+});
+
 module.exports = router;
