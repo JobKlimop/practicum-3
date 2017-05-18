@@ -69,7 +69,7 @@ router.get('/countries/:code', function (req, res, next) {
 		if(err){ throw error }
 		connection.query(query_str, function (err, rows, fields) {
 			connection.release();
-			if(err){ throw error }
+			if(err){ throw error } 
 			res.status(200).json(rows);
 		});
 	});
