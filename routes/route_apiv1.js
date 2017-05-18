@@ -54,6 +54,31 @@ router.post('/cities', function(req, res){
 	});
 });
 
+router.put('/cities', function(req, res){
+	console.log("test");
+	var city = req.body;
+	var query = {
+		sql: 'UPDATE `city` SET Population = ? WHERE ID = ?',
+		values: [city.Population, city.ID],
+		timeout: 2000
+	};
+
+	console.dir(city);
+	console.log("Values: " + query.values);
+	console.log("Query: " + query.sql);
+
+	res.contentType('application/json');
+	pool.query(query, function(error, rows, fields){
+        if(error){
+            res.status(400);
+            res.json(error);
+        } else {
+            res.status(200);
+            res.json(rows);
+        };
+	});
+});
+
 router.get('/countries/:code?', function (req, res, next) {
 
 	var code = req.params.code;
