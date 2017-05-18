@@ -55,7 +55,6 @@ router.post('/cities', function(req, res){
 });
 
 router.put('/cities/:id?', function(req, res){
-	console.log("test");
 	var id = req.params.id;
 	var city = req.body;
 	var query = {
@@ -77,6 +76,27 @@ router.put('/cities/:id?', function(req, res){
             res.status(200);
             res.json(rows);
         };
+	});
+});
+
+router.delete('/cities/:id?', function(req, res){
+	var id = req.params.id;
+	var query = {
+		sql: 'DELETE `city` WHERE id = ' + id + '',
+		timeout: 2000
+	};
+
+	console.log("Query: " + query.sql);
+
+	res.contentType('application/json');
+	pool.query(query, function(error, rows, fields){
+		if(error){
+			res.status(400);
+			res.json(error);
+		} else {
+			res.status(200);
+			res.json(rows);
+		};
 	});
 });
 
