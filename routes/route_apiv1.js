@@ -55,7 +55,7 @@ router.post('/cities', function(req, res){
 	});
 });
 
-router.get('/countries/:code', function (req, res, next) {
+router.get('/countries/:code?', function (req, res, next) {
 
 	var code = req.params.code;
 
