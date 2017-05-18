@@ -173,4 +173,40 @@ router.delete('/countries/:code', function (req, res) {
 	});
 });
 
+router.get('/search', function (req, res) {
+	var type = req.query.type || '';
+	var limit = req.query.limit || '';
+
+	if(type == 'city' && limit != ''){
+
+	}
+	else if(type == 'country'  && limit != ''){
+		var continent = req.query.continent || '';
+
+		var query = {
+			sql: 'SELECT * FROM `country` WHERE Continent="' + continent + '" LIMIT ' + limit,
+			timeout: 2000 // 2 seconde
+		}
+
+		console.log('Query: ' + query.sql);
+
+		res.contentType('application/json');
+		pool.query(query, function (error, rows, fields) {
+			if (error) {
+				res.status(400);
+				res.json(error);
+			} else {
+				res.status(200);
+				res.json(rows);
+			}
+			;
+		});
+	}
+	else {
+		res.contentType('application/json');
+		res.status(400);
+		res.json({"error":"not a valid query"});
+	}
+});
+
 module.exports = router;
