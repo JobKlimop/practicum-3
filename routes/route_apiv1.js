@@ -4,6 +4,8 @@
 
 // API versie 3
 
+var http        = require('http');
+
 var express = require('express');
 var router = express.Router();
 var pool = require('../db/db_connector.js');
