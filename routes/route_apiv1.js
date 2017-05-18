@@ -152,4 +152,25 @@ router.put('/countries/:code', function (req, res) {
 	});
 });
 
+router.delete('/countries/:code', function (req, res) {
+	var code = req.params.code;
+	var query = {
+		sql: 'DELETE FROM `country` WHERE Code="' + code + '"',
+		timeout: 2000 // 2 seconde
+	}
+
+	console.log('Query: ' + query.sql);
+
+	res.contentType('application/json');
+	pool.query(query, function(error, rows, fields){
+		if(error){
+			res.status(400);
+			res.json(error);
+		} else {
+			res.status(200);
+			res.json(rows);
+		};
+	});
+});
+
 module.exports = router;
