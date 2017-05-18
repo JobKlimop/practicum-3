@@ -6,11 +6,10 @@ var http        = require('http');
 var express     = require('express');
 var config      = require('./config.json');
 var bodyParser  = require('body-parser');
-var logger      = require('morgan');
 
 var app = express();
 
-app.use(bodyparser.urlencoded({'extended' : 'true'}));
+app.use(bodyParser.urlencoded({'extended' : 'true'}));
 
 app.set('PORT', config.webPort);
 
