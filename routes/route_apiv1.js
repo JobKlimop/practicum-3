@@ -4,8 +4,6 @@
 
 // API versie 3
 
-var http        = require('http');
-
 var express = require('express');
 var router = express.Router();
 var pool = require('../db/db_connector.js');
@@ -41,10 +39,11 @@ router.post('/cities', function(req, res){
 	};
 
 	console.dir(city);
+	console.log("Values: " + query.values);
 	console.log('Query:' + query.sql);
 
 	res.contentType('application/json');
-	db.query(query, function(error, rows, fields){
+	pool.query(query, function(error, rows, fields){
 		if(error){
 			res.status(400);
 			res.json(error);
@@ -79,6 +78,30 @@ router.get('/countries/:code?', function (req, res, next) {
 
 router.get('/help', function (req, res) {
 	res.json({"msg": "Help function"});
+});
+
+router.post('/countries', function(req, res){
+    var country = req.body;
+    var query = {
+        sql: 'INSERT INTO `country`(Code, Name, Continent, Region, SurfaceArea, IndepYear, Population, LifeExpactancy, GNP, GNPOId, LocalName, GovernmentForm, HeadOfState, Capital, Code2) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        values: [country.Code, country.Name, country.Continent, country.Region, country.SurfaceAre, country.IndepYear, country.Population, country.LifeExpactancy, country.GNP, country.GNPOId, country.LocalName, country.GovernmentForm, country.HeadOfState, country.Capital, country.Code2],
+        timeout: 2000 // 2 seconde
+    };
+
+    console.dir(country);
+    console.log("Values: " + query.values);
+    console.log('Query:' + query.sql);
+
+    res.contentType('application/json');
+    pool.query(query, function(error, rows, fields){
+        if(error){
+            res.status(400);
+            res.json(error);
+        } else {
+            res.status(200);
+            res.json(rows);
+        };
+    });
 });
 
 module.exports = router;
