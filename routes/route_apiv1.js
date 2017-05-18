@@ -129,10 +129,11 @@ router.post('/countries', function(req, res){
     });
 });
 
-router.put('/countries', function (req, res) {
+router.put('/countries/:code', function (req, res) {
+	var code = req.params.code;
 	var country = req.body;
 	var query = {
-		sql: 'UPDATE `country` SET Population=' + country.Population + ' WHERE Code="' + country.Code + '"',
+		sql: 'UPDATE `country` SET Population=' + country.Population + ' WHERE Code="' + code + '"',
 		timeout: 2000 // 2 seconde
 	}
 
