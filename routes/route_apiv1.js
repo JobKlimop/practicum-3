@@ -54,16 +54,17 @@ router.post('/cities', function(req, res){
 	});
 });
 
-router.put('/cities', function(req, res){
+router.put('/cities/:id?', function(req, res){
 	console.log("test");
+	var id = req.params.id;
 	var city = req.body;
 	var query = {
-		sql: 'UPDATE `city` SET Population = ? WHERE ID = ?',
-		values: [city.Population, city.ID],
+		sql: 'UPDATE `city` SET Population = ? WHERE ID = ' + id +'',
+		values: [city.Population],
 		timeout: 2000
 	};
 
-	console.dir(city);
+	console.dir(id);
 	console.log("Values: " + query.values);
 	console.log("Query: " + query.sql);
 
