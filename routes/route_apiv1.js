@@ -3,13 +3,11 @@
  */
 
 // API versie 3
-
-var http        = require('http');
-
 var express = require('express');
 var router = express.Router();
 var pool = require('../db/db_connector.js');
 var http = require('http');
+var bodyParser  = require('body-parser');
 
 router.get('/cities/:id?', function (req, res, next) {
 
@@ -44,7 +42,7 @@ router.post('/cities', function(req, res){
 	console.log('Query:' + query.sql);
 
 	res.contentType('application/json');
-	db.query(query, function(error, rows, fields){
+	pool.query(query, function(error, rows, fields){
 		if(error){
 			res.status(400);
 			res.json(error);
