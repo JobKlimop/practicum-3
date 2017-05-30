@@ -10,6 +10,8 @@ var pool = require('../db/db_connector.js');
 var poolUser = require('../db/db_connector_user');
 var http = require('http');
 var auth = require('../auth/Authentication');
+var bcrypt = require('bcrypt');
+const saltRounds = 1;
 
 router.all( new RegExp("[^(\/login)]"), function (req, res, next) {
 
@@ -61,9 +63,10 @@ router.route('/login').post( function(req, res) {
             console.log("Rows: " + rows[0]["password"]);
 			var dbusername = rows[0]["username"];
 			var dbpassword = rows[0]["password"];
+			var checkPassword = bcrypt.compareSync(password, dbpassword);
 
 			var result = false;
-			if(username === dbusername && password === dbpassword){
+			if(username === dbusername && checkPassword){
 				result = true;
 			}
 			// Generate JWT
@@ -76,13 +79,68 @@ router.route('/login').post( function(req, res) {
         }
         ;
     });
+});
 
+router.post('/register', function(req, res){
+	var username = req.body.username || '';
+	var password = req.body.password || '';
+	console.log("Username: " + username);
 
-    // Debug
-    // console.log("result: " +  JSON.stringify(result[0]));
+	var query = {
+		sql: 'SELECT * FROM user WHERE username="' + username + '"',
+		timeout:2000 //2 seconde
+	}
 
+    console.log('Query: ' + query.sql);
 
+    res.contentType('application/json');
+    poolUser.query(query, function (error, rows, fields) {
+    	console.log("1");
+        if (error) {
+            res.status(400);
+            res.json(error);
+        } else {
+            console.log("1.1");
+        	if("username" in rows) {
+                var dbusername = rows[0]["username"];
+                console.log("1.2");
+            } else {
+                console.log("1.3");
+        		dbusername = '';
+			}
 
+            var duplicate = false;
+            console.log("1.4");
+            if(username === dbusername){
+                console.log("2");
+                duplicate = true;
+                res.status(400);
+                res.json({"Error":"Gebruiker bestaat al"});
+            }
+
+            if(duplicate == false){
+                console.log("3");
+            	var hash = bcrypt.hashSync(password, saltRounds);
+                console.log("4");
+				var query = {
+					sql:'INSERT INTO user (username, password) VALUES (?,?)',
+					values: [username, hash],
+					timeout:2000 //2 seconde
+				}
+
+                poolUser.query(query, function(error, rows, fields){
+                    console.log("5");
+					if(error){
+						res.status(400);
+						res.json(error);
+					} else {
+						res.status(200);
+						res.json(rows);
+					}
+                });
+            }
+        }
+    });
 });
 
 router.get('/cities/:id?', function (req, res, next) {
