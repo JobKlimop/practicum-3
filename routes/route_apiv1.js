@@ -198,6 +198,24 @@ router.get('/search', function (req, res) {
 	var limit = req.query.limit || '';
 
 	if(type == 'city' && limit != ''){
+		var countrycode = req.query.countrycode || '';
+
+		var query = {
+			sql: 'SELECT * FROM city WHERE CountryCode="' + countrycode + '" LIMIT ' + limit,
+			timeout: 2000 //2 seconde
+		}
+
+        res.contentType('application/json');
+        pool.query(query, function (error, rows, fields) {
+            if (error) {
+                res.status(400);
+                res.json(error);
+            } else {
+                res.status(200);
+                res.json(rows);
+            }
+            ;
+        });
 
 	}
 	else if(type == 'country'  && limit != ''){
