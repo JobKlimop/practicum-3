@@ -1,5 +1,5 @@
 /**
- * Created by Thomas on 5/11/2017.
+ * Created by Thomas on 5/30/2017.
  */
 var mysql = require('mysql');
 var config = require('../config');
@@ -9,7 +9,7 @@ var pool = mysql.createPool({
     host        : config.dbServer,
     user        : config.dbUsername,
     password    : config.dbPassword,
-    database    : config.dbSchema,
+    database    : config.dbSchema2,
 
 });
 

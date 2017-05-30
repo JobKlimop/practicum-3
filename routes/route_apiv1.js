@@ -7,7 +7,83 @@
 var express = require('express');
 var router = express.Router();
 var pool = require('../db/db_connector.js');
+var poolUser = require('../db/db_connector_user');
 var http = require('http');
+var auth = require('../auth/Authentication');
+
+router.all( new RegExp("[^(\/login)]"), function (req, res, next) {
+
+    //
+    console.log("VALIDATE TOKEN")
+
+    var token = (req.header('X-Access-Token')) || '';
+
+    auth.decodeToken(token, function (err, payload) {
+        if (err) {
+            console.log('Error handler: ' + err.message);
+            res.status((err.status || 401 )).json({error: new Error("Not authorised").message});
+        } else {
+            next();
+        }
+    });
+});
+
+router.route('/login').post( function(req, res) {
+
+    //
+    // Get body params or ''
+    //
+    var username = req.body.username || '';
+    var password = req.body.password || '';
+    console.log("Username: " + username);
+    //
+    // Check in datasource for user & password combo.
+    //
+    // Remark: result is an ARRAY (design error?)
+    //
+
+    var query = {
+        // sql: 'SELECT * FROM `user` WHERE username="' + username + '"',
+		sql: 'SELECT * FROM `user` WHERE username="' + username + '"',
+        timeout: 2000 // 2 seconde
+    }
+
+
+
+    console.log('Query: ' + query.sql);
+
+    res.contentType('application/json');
+    poolUser.query(query, function (error, rows, fields) {
+        if (error) {
+            res.status(400);
+            res.json(error);
+        } else {
+            console.log("Rows: " + rows[0]["password"]);
+			var dbusername = rows[0]["username"];
+			var dbpassword = rows[0]["password"];
+
+			var result = false;
+			if(username === dbusername && password === dbpassword){
+				result = true;
+			}
+			// Generate JWT
+
+            if(result){
+                res.status(200).json({"token" : auth.encodeToken(username), "username" : username});
+            } else {
+                res.status(401).json({"error":"Invalid credentials, bye"})
+            }
+        }
+        ;
+    });
+
+
+    // Debug
+    // console.log("result: " +  JSON.stringify(result[0]));
+
+
+
+});
 
 router.get('/cities/:id?', function (req, res, next) {
 

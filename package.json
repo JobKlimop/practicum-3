@@ -6,7 +6,9 @@
   "dependencies": {
     "body-parser": "^1.17.1",
     "express": "^4.15.2",
-    "mysql": "^2.13.0"
+    "mysql": "^2.13.0",
+    "moment": "2.18.1",
+    "jwt-simple": "^0.5.1"
   },
   "devDependencies": {},
   "scripts": {

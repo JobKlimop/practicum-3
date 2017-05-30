@@ -4,5 +4,6 @@
   "dbPassword": "Aardappel",
   "dbSchema": "world",
   "dbServer": "localhost",
-  "webPort": "8080"
+  "webPort": "8080",
+  "dbSchema2": "users"
 }
