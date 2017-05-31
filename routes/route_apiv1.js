@@ -13,9 +13,7 @@ var auth = require('../auth/Authentication');
 var bcrypt = require('bcrypt');
 const saltRounds = 1;
 
-router.all( new RegExp("[^(\/login)]"), function (req, res, next) {
-
-    //
+router.all( new RegExp("[^(\/login|register)]"), function (req, res, next) {
     console.log("VALIDATE TOKEN")
 
     var token = (req.header('X-Access-Token')) || '';
@@ -31,26 +29,15 @@ router.all( new RegExp("[^(\/login)]"), function (req, res, next) {
 });
 
 router.route('/login').post( function(req, res) {
-
-    //
-    // Get body params or ''
-    //
     var username = req.body.username || '';
     var password = req.body.password || '';
     console.log("Username: " + username);
-    //
-    // Check in datasource for user & password combo.
-    //
-    // Remark: result is an ARRAY (design error?)
-    //
 
     var query = {
         // sql: 'SELECT * FROM `user` WHERE username="' + username + '"',
 		sql: 'SELECT * FROM `user` WHERE username="' + username + '"',
         timeout: 2000 // 2 seconde
     }
-
-
 
     console.log('Query: ' + query.sql);
 
@@ -77,7 +64,6 @@ router.route('/login').post( function(req, res) {
                 res.status(401).json({"error":"Invalid credentials, bye"})
             }
         }
-        ;
     });
 });
 
@@ -144,7 +130,6 @@ router.post('/register', function(req, res){
 });
 
 router.get('/cities/:id?', function (req, res, next) {
-
 	var id = req.params.id;
 
 	var query_str;
@@ -235,7 +220,6 @@ router.delete('/cities/:id?', function(req, res){
 });
 
 router.get('/countries/:code?', function (req, res, next) {
-
 	var code = req.params.code;
 
 	var query_str;
