@@ -81,33 +81,25 @@ router.post('/register', function(req, res){
 
     res.contentType('application/json');
     poolUser.query(query, function (error, rows, fields) {
-    	console.log("1");
         if (error) {
             res.status(400);
             res.json(error);
         } else {
-            console.log("1.1");
         	if("username" in rows) {
                 var dbusername = rows[0]["username"];
-                console.log("1.2");
             } else {
-                console.log("1.3");
         		dbusername = '';
 			}
 
             var duplicate = false;
-            console.log("1.4");
             if(username === dbusername){
-                console.log("2");
                 duplicate = true;
                 res.status(400);
                 res.json({"Error":"Gebruiker bestaat al"});
             }
 
             if(duplicate == false){
-                console.log("3");
             	var hash = bcrypt.hashSync(password, saltRounds);
-                console.log("4");
 				var query = {
 					sql:'INSERT INTO user (username, password) VALUES (?,?)',
 					values: [username, hash],
@@ -115,7 +107,6 @@ router.post('/register', function(req, res){
 				}
 
                 poolUser.query(query, function(error, rows, fields){
-                    console.log("5");
 					if(error){
 						res.status(400);
 						res.json(error);
