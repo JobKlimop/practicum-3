@@ -85,37 +85,22 @@ router.post('/register', function(req, res){
             res.status(400);
             res.json(error);
         } else {
-        	if("username" in rows[0]) {
-		        var dbusername = rows[0]["username"];
-            } else {
-		        dbusername = '';
-			}
+            var hash = bcrypt.hashSync(password, saltRounds);
+			var query = {
+				sql:'INSERT INTO user (username, password) VALUES (?,?)',
+				values: [username, hash],
+				timeout:2000 //2 seconde
+			};
 
-	        var duplicate = false;
-            if(username === dbusername){
-                duplicate = true;
-                res.status(400);
-                res.json({"Error":"Gebruiker bestaat al"});
-            }
-
-            if(duplicate === false){
-            	var hash = bcrypt.hashSync(password, saltRounds);
-				var query = {
-					sql:'INSERT INTO user (username, password) VALUES (?,?)',
-					values: [username, hash],
-					timeout:2000 //2 seconde
+            poolUser.query(query, function(error, rows, fields){
+				if(error){
+					res.status(400);
+					res.json(error);
+				} else {
+					res.status(200);
+					res.json({"msg":"Gebruiker aangemaakt"});
 				}
-
-                poolUser.query(query, function(error, rows, fields){
-					if(error){
-						res.status(400);
-						res.json(error);
-					} else {
-						res.status(200);
-						res.json({"msg":"Gebruiker aangemaakt"});
-					}
-                });
-            }
+            });
         }
     });
 });
