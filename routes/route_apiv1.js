@@ -75,7 +75,7 @@ router.post('/register', function(req, res){
 	var query = {
 		sql: 'SELECT * FROM user WHERE username="' + username + '"',
 		timeout:2000 //2 seconde
-	}
+	};
 
     console.log('Query: ' + query.sql);
 
@@ -85,20 +85,20 @@ router.post('/register', function(req, res){
             res.status(400);
             res.json(error);
         } else {
-        	if("username" in rows) {
-                var dbusername = rows[0]["username"];
+        	if("username" in rows[0]) {
+		        var dbusername = rows[0]["username"];
             } else {
-        		dbusername = '';
+		        dbusername = '';
 			}
 
-            var duplicate = false;
+	        var duplicate = false;
             if(username === dbusername){
                 duplicate = true;
                 res.status(400);
                 res.json({"Error":"Gebruiker bestaat al"});
             }
 
-            if(duplicate == false){
+            if(duplicate === false){
             	var hash = bcrypt.hashSync(password, saltRounds);
 				var query = {
 					sql:'INSERT INTO user (username, password) VALUES (?,?)',
@@ -112,7 +112,7 @@ router.post('/register', function(req, res){
 						res.json(error);
 					} else {
 						res.status(200);
-						res.json(rows);
+						res.json({"msg":"Gebruiker aangemaakt"});
 					}
                 });
             }
