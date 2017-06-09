@@ -34,7 +34,6 @@ router.route('/login').post( function(req, res) {
     console.log("Username: " + username);
 
     var query = {
-        // sql: 'SELECT * FROM `user` WHERE username="' + username + '"',
 		sql: 'SELECT * FROM `user` WHERE username="' + username + '"',
         timeout: 2000 // 2 seconde
     }
@@ -47,22 +46,25 @@ router.route('/login').post( function(req, res) {
             res.status(400);
             res.json(error);
         } else {
-            console.log("Rows: " + rows[0]["password"]);
-			var dbusername = rows[0]["username"];
-			var dbpassword = rows[0]["password"];
-			var checkPassword = bcrypt.compareSync(password, dbpassword);
+        	if (rows[0] != null) {
+		        var dbusername = rows[0]["username"];
+		        var dbpassword = rows[0]["password"];
+		        var checkPassword = bcrypt.compareSync(password, dbpassword);
 
-			var result = false;
-			if(username === dbusername && checkPassword){
-				result = true;
-			}
-			// Generate JWT
+		        var result = false;
+		        if (username === dbusername && checkPassword) {
+			        result = true;
+		        }
+		        // Generate JWT
 
-            if(result){
-                res.status(200).json({"token" : auth.encodeToken(username), "username" : username});
-            } else {
-                res.status(401).json({"error":"Invalid credentials, bye"})
-            }
+		        if (result) {
+			        res.status(200).json({"token": auth.encodeToken(username), "username": username});
+		        } else {
+			        res.status(401).json({"error": "Invalid credentials, bye"})
+		        }
+	        } else {
+		        res.status(401).json({"error": "Invalid credentials, bye"})
+	        }
         }
     });
 });
@@ -125,7 +127,7 @@ router.get('/cities/:id?', function (req, res, next) {
 	});
 });
 
-router.post('/cities', function(req, res){
+router.post('/cities', function(req, res) {
 	var city = req.body;
 	var query = {
 		sql: 'INSERT INTO `city`(ID, Name, CountryCode, District, Population) VALUES (?, ?, ?, ?, ?)',
