@@ -155,8 +155,8 @@ router.put('/cities/:id?', function(req, res){
 	var id = req.params.id;
 	var city = req.body;
 	var query = {
-		sql: 'UPDATE `city` SET Population = ? WHERE ID = ' + id +'',
-		values: [city.Population],
+		sql: 'UPDATE `city` SET Name = ?, CountryCode = ?, District = ?, Population = ? WHERE ID = ' + id +'',
+		values: [city.Name, city.CountryCode, city. District, city.Population],
 		timeout: 2000
 	};
 
